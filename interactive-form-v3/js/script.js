@@ -22,27 +22,35 @@ const designSelectElement = document.querySelector('#design');
 const colorSelectElement = document.querySelector('#color');
 const colorOptionElements = colorSelectElement.children;
 
-console.log(designSelectElement);
-console.log(colorSelectElement);
-console.log(colorOptionElements);
-
 colorSelectElement.disabled = true;
 
 designSelectElement.addEventListener('change', e => {
     colorSelectElement.disabled = false;
     for (let i = 0; i < colorOptionElements.length; i++) {
-        const designTheme = e.target.value;
-        console.log(designTheme);
+        let designTheme = e.target.value;
         let colorTheme = colorOptionElements[i].getAttribute('data-theme');
-        console.log(colorTheme);
         if(designTheme === colorTheme) {
-            console.log('equal');
             colorOptionElements[i].hidden = false;
             colorOptionElements[i].selected = true;
         } else {
-            console.log('false');
             colorOptionElements[i].hidden = true;
             colorOptionElements[i].selected = false;
         }
     }
+});
+
+// (6) "Register for Activities" section: Update total cost as activities are checked or unchecked.
+const registerForActivities = document.querySelector('#activities');
+const activitiesCost = document.querySelector('#activities-cost');
+let totalCost = 0;
+
+registerForActivities.addEventListener('change', e => {
+    let cost = e.target.getAttribute('data-cost');
+    cost = +cost;
+    if (e.target.checked) {
+        totalCost = totalCost + cost;
+    } else {
+        totalCost = totalCost - cost;
+    }
+    activitiesCost.innerHTML = `Total: $${totalCost}`;
 });
