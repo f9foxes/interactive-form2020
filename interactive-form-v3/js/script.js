@@ -54,3 +54,46 @@ registerForActivities.addEventListener('change', e => {
     }
     activitiesCost.innerHTML = `Total: $${totalCost}`;
 });
+
+// (7) "Payment Info" section:
+
+// The "I'm going to pay with:" <select> element
+// The <div> element with the id of "credit-card"
+// The <div> element with the id of "paypal"
+// The <div> element with the id of "bitcoin"
+// Create variables to reference the above elements, and log them out to the console to confirm their identity.
+const payment = document.querySelector('#payment');
+const creditCard = document.querySelector('#credit-card');
+const paypal = document.querySelector('#paypal');
+const bitcoin = document.querySelector('#bitcoin');
+console.log(payment, creditCard, paypal, bitcoin);
+
+// Use the "paypal" and "bitcoin" variables above to hide these elements initially.
+paypal.style.display = 'none';
+bitcoin.style.display = 'none';
+// Use the payment variable above to target the element’s second child element and give it the selected property. 
+//The .children property and the setAttribute method will be helpful here.
+payment.children[1].selected = true;
+// Use the payment variable above to listen for the change event on this element. 
+// When a change is detected, display the <div> element 
+// with the id that matches the value of the event.target element. 
+// And hide the other two <div> elements.
+payment.addEventListener('change', e => {
+    let paymentMethod = e.target.value;
+    if (paymentMethod === 'credit-card'){
+        creditCard.style.display = 'block';
+        paypal.style.display = 'none';
+        bitcoin.style.display = 'none';
+    } else if (paymentMethod === 'paypal') {
+        creditCard.style.display = 'none';
+        paypal.style.display = 'block';
+        bitcoin.style.display = 'none';
+    } else { 
+        creditCard.style.display = 'none';
+        paypal.style.display = 'none';
+        bitcoin.style.display = 'block';
+    }
+});
+// Now save and refresh the page, and when the payment method option is updated in the drop-down menu, the payment sections in the form will update accordingly.
+
+
