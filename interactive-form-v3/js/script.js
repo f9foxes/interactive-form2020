@@ -56,28 +56,17 @@ registerForActivities.addEventListener('change', e => {
 });
 
 // (7) "Payment Info" section:
-
-// The "I'm going to pay with:" <select> element
-// The <div> element with the id of "credit-card"
-// The <div> element with the id of "paypal"
-// The <div> element with the id of "bitcoin"
-// Create variables to reference the above elements, and log them out to the console to confirm their identity.
 const payment = document.querySelector('#payment');
 const creditCard = document.querySelector('#credit-card');
 const paypal = document.querySelector('#paypal');
 const bitcoin = document.querySelector('#bitcoin');
 console.log(payment, creditCard, paypal, bitcoin);
 
-// Use the "paypal" and "bitcoin" variables above to hide these elements initially.
 paypal.style.display = 'none';
 bitcoin.style.display = 'none';
-// Use the payment variable above to target the element’s second child element and give it the selected property. 
-//The .children property and the setAttribute method will be helpful here.
+
 payment.children[1].selected = true;
-// Use the payment variable above to listen for the change event on this element. 
-// When a change is detected, display the <div> element 
-// with the id that matches the value of the event.target element. 
-// And hide the other two <div> elements.
+
 payment.addEventListener('change', e => {
     let paymentMethod = e.target.value;
     if (paymentMethod === 'credit-card'){
@@ -94,6 +83,34 @@ payment.addEventListener('change', e => {
         bitcoin.style.display = 'block';
     }
 });
-// Now save and refresh the page, and when the payment method option is updated in the drop-down menu, the payment sections in the form will update accordingly.
 
+// (8) Form Validation:
+const emailAddress = document.querySelector('#email');
+const cardNumber = document.querySelector('#cc-num');
+const zipCode = document.querySelector('#zip');
+const cvv = document.querySelector('#cvv');
+const formElement = document.querySelector('form');
+console.log(emailAddress, cardNumber, zipCode, cvv, formElement);
 
+formElement.addEventListener('submit', e => {
+    let nameValue = inputName.value;
+    let emailValue = emailAddress.value;
+    let cardNumberValue = cardNumber.value;
+    let zipCodeValue = zipCode.value;
+    let cvvValue = cvv.value;
+
+    let isName = /^[a-z]+$/i.test(nameValue);
+    let isEmail = /^[^@]+@[^@.]+\.[a-z]+$/i.test(emailValue);
+    let isCardNumber = /\b(?:\d[ -]*?){13,16}\b/.test(cardNumberValue);
+    let isZipCode = /^\d{5}(?:[-\s]\d{4})?$/.test(zipCodeValue);
+    let isCVV = /^[0-9]{3,4}$/.test(cvvValue);
+    if (payment.children[1].selected){
+        if (!isName | !isEmail | !isCardNumber | !isZipCode | !isCVV) {
+            e.preventDefault();
+        } 
+    } else if (!isName | !isEmail) {
+        e.preventDefault();
+    }  
+});
+
+// (9) Accessibility:
