@@ -102,26 +102,27 @@ formElement.addEventListener('submit', e => {
     let zipCodeValue = zipCode.value;
     let cvvValue = cvv.value;
     // Check if values are valid inputs.
+    let isTotalCost = /^[1-9]\d*$/.test(totalCost);
     let isName = /^[a-z]+$/i.test(nameValue);
     let isEmail = /^[^@]+@[^@.]+\.[a-z]+$/i.test(emailValue);
-    let isCardNumber = /\b(?:\d[ -]*?){13,16}\b/.test(cardNumberValue);
-    let isZipCode = /^\d{5}(?:[-\s]\d{4})?$/.test(zipCodeValue);
-    let isCVV = /^[0-9]{3,4}$/.test(cvvValue);
+    let isCardNumber = /^[1-9][0-9]{12,15}$/.test(cardNumberValue);
+    let isZipCode = /^[0-9]{5}$/.test(zipCodeValue);
+    let isCVV = /^[0-9]{3}$/.test(cvvValue);
     // Store array of test inputs in variable 
         // Passed in as first argument into invalid function if submit is prevented.
-    let testArr = [isName, isEmail, isCardNumber, isZipCode, isCVV];
+    let testArr = [isName, isEmail, isCardNumber, isZipCode, isCVV, isTotalCost];
     // Store array of inputs in variable 
         // Passed in as second argument into invalid function if submit is prevented.
-    let inputArr = [inputName, emailAddress, cardNumber, zipCode, cvv];
+    let inputArr = [inputName, emailAddress, cardNumber, zipCode, cvv, activitiesCost];
 
     // Prevent default and call invalid function if submit default is prevented.
         // Submit default is prevented if any one test does not pass.
     if (payment.children[1].selected){
-        if (!isName | !isEmail | !isCardNumber | !isZipCode | !isCVV) {
+        if (!isName | !isEmail | !isTotalCost | !isCardNumber | !isZipCode | !isCVV) {
             e.preventDefault();
             invalid(testArr, inputArr);
         } 
-    } else if (!isName | !isEmail) {
+    } else if (!isName | !isEmail | !isTotalCost) {
         e.preventDefault();
         invalid(testArr, inputArr);
     }  
@@ -154,7 +155,7 @@ for (i = 0; i < checkBox.length; i++) {
     // a) The 'not-valid' class is removed 
     // b) The 'valid' class is added.
     // c) The parent's last child is not displayed.
-function invalid(test,input) {
+function invalid(test, input) {
     for (let i = 0; i < test.length; i++) {
         let parent = input[i].parentElement;
         if (!test[i]) {
