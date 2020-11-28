@@ -104,13 +104,62 @@ formElement.addEventListener('submit', e => {
     let isCardNumber = /\b(?:\d[ -]*?){13,16}\b/.test(cardNumberValue);
     let isZipCode = /^\d{5}(?:[-\s]\d{4})?$/.test(zipCodeValue);
     let isCVV = /^[0-9]{3,4}$/.test(cvvValue);
+    let testArr = [isName, isEmail, isCardNumber, isZipCode, isCVV];
+    let inputArr = [inputName, emailAddress, cardNumber, zipCode, cvv];
+
+
     if (payment.children[1].selected){
         if (!isName | !isEmail | !isCardNumber | !isZipCode | !isCVV) {
             e.preventDefault();
+            invalid(testArr, inputArr);
         } 
     } else if (!isName | !isEmail) {
         e.preventDefault();
+        invalid(testArr, inputArr);
     }  
 });
 
 // (9) Accessibility:
+// When the checkboxes in the "Register for Activities" section are in focus, 
+// there’s little to no indication. So to improve accessibility, 
+// the checkboxes’ parent label elements should receive additional styles 
+// when their respective checkboxes are in focus.
+
+const checkBox = document.querySelector('#activities-box').querySelectorAll('input');
+console.log(checkBox);
+
+for (i = 0; i < checkBox.length; i++) {
+    let box = checkBox[i];
+    box.addEventListener('focus', e => {
+        let parentElFocus = e.target.parentElement;
+        parentElFocus.classList.add('focus');
+    });
+    box.addEventListener('blur', e => {
+        let parentElBlur = e.target.parentElement;
+        parentElBlur.classList.remove('focus');
+    });
+}
+
+// When an invalid form field or section prevents the form from submitting, 
+// there’s little to no indication. So to improve accessibility, 
+// add form input validation error indications that can be perceived by all users.
+
+// When validating a required form field, like the "Name" filed, 
+// and checking whether the field is valid or not, you’ll need to perform three tasks;
+function invalid(test,input) {
+    for (let i = 0; i < test.length; i++) {
+        if (!test[i]) {
+            let parent = input[i].parentElement;
+            parent.classList.add('not-valid');
+            parent.classList.remove('valid');
+            parentLastChild = parent.lastElementChild;
+            parentLastChild.style.display = 'block';
+        } else {
+            let parent = input[i].parentElement;
+            parent.classList.add('valid');
+            parent.classList.remove('not-valid');
+            parentLastChild = parent.lastElementChild;
+            parentLastChild.style.display = 'none';
+        }
+    }   
+}
