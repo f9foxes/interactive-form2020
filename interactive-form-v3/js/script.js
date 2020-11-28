@@ -1,8 +1,8 @@
-// (3) The "Name" field: Focus inside name input on page load. 
+// (1) The "Name" field: Focus inside name input on page load. 
 const inputName = document.getElementById('name');
 inputName.focus();
 
-// (4) "Job Role" section: Toggle other job role input display to block if other job role is selected
+// (2) "Job Role" section: Toggle other job role input display to block if other job role is selected
 const jobRoleSelect = document.getElementById('title');
 const otherJobRoleInput = document.getElementById('other-job-role');
 
@@ -17,7 +17,7 @@ jobRoleSelect.addEventListener('change', e => {
     }
 });
 
-// (5) "T-Shirt Info" section: Colors are disabled until a design is chosen then only colors available per design are enabled.
+// (3) "T-Shirt Info" section: Colors are disabled until a design is chosen then only colors available per design are enabled.
 const designSelectElement = document.querySelector('#design');
 const colorSelectElement = document.querySelector('#color');
 const colorOptionElements = colorSelectElement.children;
@@ -39,7 +39,7 @@ designSelectElement.addEventListener('change', e => {
     }
 });
 
-// (6) "Register for Activities" section: Update total cost as activities are checked or unchecked.
+// (4) "Register for Activities" section: Update total cost as activities are checked or unchecked.
 const registerForActivities = document.querySelector('#activities');
 const activitiesCost = document.querySelector('#activities-cost');
 let totalCost = 0;
@@ -55,7 +55,7 @@ registerForActivities.addEventListener('change', e => {
     activitiesCost.innerHTML = `Total: $${totalCost}`;
 });
 
-// (7) "Payment Info" section:
+// (5) "Payment Info" section:
 const payment = document.querySelector('#payment');
 const creditCard = document.querySelector('#credit-card');
 const paypal = document.querySelector('#paypal');
@@ -64,9 +64,9 @@ console.log(payment, creditCard, paypal, bitcoin);
 
 paypal.style.display = 'none';
 bitcoin.style.display = 'none';
-
+// Selects credit card as default form of payment.
 payment.children[1].selected = true;
-
+// if the form of payment is changed, styles are updated on the page.
 payment.addEventListener('change', e => {
     let paymentMethod = e.target.value;
     if (paymentMethod === 'credit-card'){
@@ -84,7 +84,8 @@ payment.addEventListener('change', e => {
     }
 });
 
-// (8) Form Validation:
+// (6) Form Validation:
+// Get elements to validate.
 const emailAddress = document.querySelector('#email');
 const cardNumber = document.querySelector('#cc-num');
 const zipCode = document.querySelector('#zip');
@@ -92,22 +93,29 @@ const cvv = document.querySelector('#cvv');
 const formElement = document.querySelector('form');
 console.log(emailAddress, cardNumber, zipCode, cvv, formElement);
 
+// Listen for a submit event and check to see if inputs are valid.
 formElement.addEventListener('submit', e => {
+    // Store element values to variables.
     let nameValue = inputName.value;
     let emailValue = emailAddress.value;
     let cardNumberValue = cardNumber.value;
     let zipCodeValue = zipCode.value;
     let cvvValue = cvv.value;
-
+    // Check if values are valid inputs.
     let isName = /^[a-z]+$/i.test(nameValue);
     let isEmail = /^[^@]+@[^@.]+\.[a-z]+$/i.test(emailValue);
     let isCardNumber = /\b(?:\d[ -]*?){13,16}\b/.test(cardNumberValue);
     let isZipCode = /^\d{5}(?:[-\s]\d{4})?$/.test(zipCodeValue);
     let isCVV = /^[0-9]{3,4}$/.test(cvvValue);
+    // Store array of test inputs in variable 
+        // Passed in as first argument into invalid function if submit is prevented.
     let testArr = [isName, isEmail, isCardNumber, isZipCode, isCVV];
+    // Store array of inputs in variable 
+        // Passed in as second argument into invalid function if submit is prevented.
     let inputArr = [inputName, emailAddress, cardNumber, zipCode, cvv];
 
-
+    // Prevent default and call invalid function if submit default is prevented.
+        // Submit default is prevented if any one test does not pass.
     if (payment.children[1].selected){
         if (!isName | !isEmail | !isCardNumber | !isZipCode | !isCVV) {
             e.preventDefault();
@@ -119,11 +127,9 @@ formElement.addEventListener('submit', e => {
     }  
 });
 
-// (9) Accessibility:
-// When the checkboxes in the "Register for Activities" section are in focus, 
-// there’s little to no indication. So to improve accessibility, 
-// the checkboxes’ parent label elements should receive additional styles 
-// when their respective checkboxes are in focus.
+// (7) Accessibility: 
+    // a) When a checkbox is in focus, parent element gets the class of focus.   
+    // b) The class is removed when blur event happens on checkbox.
 
 const checkBox = document.querySelector('#activities-box').querySelectorAll('input');
 console.log(checkBox);
@@ -140,22 +146,23 @@ for (i = 0; i < checkBox.length; i++) {
     });
 }
 
-// When an invalid form field or section prevents the form from submitting, 
-// there’s little to no indication. So to improve accessibility, 
-// add form input validation error indications that can be perceived by all users.
-
-// When validating a required form field, like the "Name" filed, 
-// and checking whether the field is valid or not, you’ll need to perform three tasks;
+//This function is called when the submit default is prevented.
+// If an invalid form field is detected on submit:
+    // a) The input element receives a class of 'not-valid'.
+    // b) The parents last child is displayed.
+// If the input is valid on submit: 
+    // a) The 'not-valid' class is removed 
+    // b) The 'valid' class is added.
+    // c) The parent's last child is not displayed.
 function invalid(test,input) {
     for (let i = 0; i < test.length; i++) {
+        let parent = input[i].parentElement;
         if (!test[i]) {
-            let parent = input[i].parentElement;
             parent.classList.add('not-valid');
             parent.classList.remove('valid');
             parentLastChild = parent.lastElementChild;
             parentLastChild.style.display = 'block';
         } else {
-            let parent = input[i].parentElement;
             parent.classList.add('valid');
             parent.classList.remove('not-valid');
             parentLastChild = parent.lastElementChild;
