@@ -130,7 +130,7 @@ formElement.addEventListener('submit', e => {
 
 // (7) Accessibility: 
     // a) When a checkbox is in focus, parent element gets the class of focus.   
-    // b) The class is removed when blur event happens on checkbox.
+    // b) The class is removed when blur event fires.
 
 const checkBox = document.querySelector('#activities-box').querySelectorAll('input');
 console.log(checkBox);
